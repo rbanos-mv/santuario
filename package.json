@@ -28,7 +28,8 @@
     "e2e": "nx e2e",
     "e2e:api": "nx e2e api-e2e",
     "e2e:cloud": "nx e2e cloud-e2e",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
   },
   "private": true,
   "dependencies": {
@@ -39,6 +40,8 @@
     "rxjs": "^7.8.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@eslint/js": "^9.8.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.0",
@@ -58,9 +61,12 @@
     "@types/node": "20.19.9",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
+    "git-commit-msg-linter": "^5.0.8",
+    "husky": "^9.1.7",
     "jest": "^30.0.2",
     "jest-environment-node": "^30.0.2",
     "jest-util": "^30.0.2",
+    "lint-staged": "^16.2.0",
     "nx": "21.5.3",
     "prettier": "^2.6.2",
     "ts-jest": "^29.4.0",
