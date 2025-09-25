@@ -34,10 +34,14 @@
   "private": true,
   "dependencies": {
     "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/typeorm": "^11.0.0",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "typeorm": "^0.3.27"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
@@ -58,7 +62,8 @@
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
     "@types/jest": "^30.0.0",
-    "@types/node": "20.19.9",
+    "@types/node": "^20.19.9",
+    "@types/pg": "^8.15.5",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
     "git-commit-msg-linter": "^5.0.8",
