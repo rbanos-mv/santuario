@@ -1,0 +1,50 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node-mongo
+{
+  "name": "Node.js & Mongo DB",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "Angular.ng-template",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "firsttris.vscode-jest-runner",
+        "github.vscode-github-actions",
+        "humao.rest-client",
+        "mongodb.mongodb-vscode",
+        "ms-azuretools.vscode-containers",
+        "nrwl.angular-console",
+        "saoudrizwan.claude-dev",
+        "stylelint.vscode-stylelint",
+        "usernamehw.errorlens",
+        "wakatime.vscode-wakatime"
+      ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers-extra/features/angular-cli:2": {},
+    "ghcr.io/devcontainers-extra/features/nestjs-cli:2": {},
+    "ghcr.io/devcontainers-extra/features/nx-npm:1": {},
+    "ghcr.io/devcontainers-extra/features/typescript:2": {}
+  },
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [
+    3000,
+    5173,
+    27017
+  ],
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "git config --global user.name 'Roberto A. Baños Alvarez' && git config --global user.email 'roberto.banos@gmail.com'"
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}
