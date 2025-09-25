@@ -1,0 +1,106 @@
+name: Nx Monorepo CI
+
+on:
+  push:
+    branches: [main, development, "feature/**", "fix/**"]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: read
+  statuses: write
+
+concurrency:
+  group: ${{
+    github.ref == 'refs/heads/main' && 'ci-main' ||
+    github.ref == 'refs/heads/development' && 'ci-development' ||
+    github.head_ref && format('ci-pr-{0}', github.head_ref) ||
+    startsWith(github.ref, 'refs/heads/feature/') && format('ci-feature-{0}', github.ref_name) ||
+    startsWith(github.ref, 'refs/heads/fix/') && format('ci-fix-{0}', github.ref_name) ||
+    format('ci-other-{0}', github.ref_name) }}
+  cancel-in-progress: true
+
+env:
+  CI: true
+  NX_CLOUD_DISTRIBUTED_EXECUTION: true
+  NX_BRANCH: ${{ github.ref_name }}
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Necesario para nx affected
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Initialize Nx Cloud
+        uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: main
+
+      - name: Start Nx Cloud CI Run
+        run: npx nx-cloud start-ci-run --distribute-on="5 linux-medium-js" --stop-agents-after="build"
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/nx
+            node_modules
+            .nx/cache
+          key: ${{ runner.os }}-nx-${{ hashFiles('package-lock.json', 'nx.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nx-
+
+      - name: Install Dependencies
+        run: npm ci --legacy-peer-deps
+        env:
+          NODE_ENV: development
+
+      - name: Run Affected Tasks
+        run: |
+          npx nx affected --targets=lint,test,build \
+            --parallel=3 \
+            --configuration=ci \
+            --base=${{ github.event.pull_request.base.sha || 'origin/main~1' }} \
+            --head=${{ github.event.pull_request.head.sha || 'HEAD' }}
+        env:
+          NX_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          NX_BASE: ${{ github.event.pull_request.base.sha || 'origin/main~1' }}
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.run_id }}
+          path: |
+            coverage/
+            **/junit.xml
+
+      - name: Generate Nx Cloud Report
+        if: always()
+        run: npx nx-cloud record -- npx nx show projects
+
+      - name: Notify Slack on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          slack-message: "Workflow failed: ${{ github.workflow }} #${{ github.run_number }}"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
