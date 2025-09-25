@@ -2,7 +2,34 @@
   "name": "@santuario/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "ng": "nx",
+    "api": "nx serve api",
+    "cloud": "nx serve cloud",
+    "format": "prettier \"{src,apps,libs,test}/**/*.ts\" --write",
+    "format:check": "prettier \"{src,apps,libs,test}/**/*.ts\" --check",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint:check": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "test": "nx test",
+    "test:api": "nx test api",
+    "test:api:cov": "nx test api --coverage",
+    "test:api:watch": "nx test api --watch",
+    "test:api:debug": "nx test api --debug",
+    "test:cloud": "nx test cloud",
+    "test:cloud:cov": "nx test cloud --coverage",
+    "test:all": "nx run-many --target=test --all",
+    "test:all:cov": "nx run-many --target=test --all --coverage",
+    "test:affected": "nx affected:test",
+    "test:affected:cov": "nx affected:test --coverage",
+    "test:ci": "nx run-many --target=test --all --ci --coverage --watchAll=false",
+    "test:clear": "nx reset",
+    "test:watch": "nx test --watch",
+    "test:cov": "nx test --coverage",
+    "e2e": "nx e2e",
+    "e2e:api": "nx e2e api-e2e",
+    "e2e:cloud": "nx e2e cloud-e2e",
+    "typecheck": "tsc --noEmit"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^11.0.0",
@@ -42,5 +69,6 @@
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.40.0",
     "webpack-cli": "^5.1.4"
-  }
+  },
+  "author": "Roberto A. Baños Alvarez"
 }

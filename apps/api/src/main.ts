@@ -18,4 +18,7 @@ async function bootstrap() {
   );
 }
 
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Application error:', err);
+  process.exit(1);
+});
